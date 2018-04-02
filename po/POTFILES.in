@@ -40,6 +40,7 @@ plugins/sega-cd/src/sega-cd-header.vala
 plugins/sega-cd/src/sega-cd-plugin.vala
 plugins/sega-saturn/src/sega-saturn-header.vala
 plugins/sega-saturn/src/sega-saturn-plugin.vala
+plugins/sharp-x68000/src/sharp-x68000-plugin.vala
 plugins/steam/src/steam-plugin.vala
 plugins/steam/src/steam-registry.vala
 plugins/steam/src/steam-title.vala

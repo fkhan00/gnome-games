@@ -85,6 +85,21 @@ public class Games.RetroRunner : Object, Runner {
 		this.game_title = game_title;
 	}
 
+	public RetroRunner.for_media_set (RetroCoreSource core_source, MediaSet media_set, Uid uid, Title game_title) {
+		is_initialized = false;
+		is_ready = false;
+		should_save = false;
+
+		this.core_descriptor = null;
+		this.core_source = core_source;
+		this._media_set = media_set;
+		this.uid = uid;
+		this.input_capabilities = null;
+		this.game_title = game_title;
+
+		_media_set.notify["selected-media-number"].connect (on_media_number_changed);
+	}
+
 	public RetroRunner.for_media_set_and_input_capabilities (RetroCoreSource core_source, MediaSet media_set, Uid uid, InputCapabilities input_capabilities, Title game_title) {
 		is_initialized = false;
 		is_ready = false;
