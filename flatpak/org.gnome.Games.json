@@ -161,7 +161,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/grilo-plugins.git"
+                    "url" : "https://gitlab.gnome.org/exalm/grilo-plugins.git",
+                    "branch" : "x68k"
                 }
             ],
             "cleanup" : [

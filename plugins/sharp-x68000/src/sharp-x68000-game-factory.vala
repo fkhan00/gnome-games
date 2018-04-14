@@ -4,6 +4,8 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 	private const string FINGERPRINT_PREFIX = "sharp-x68000";
 	private const string MIME_TYPE_DIM = "application/x-x68k-rom";
 	private const string MIME_TYPE_XDF = "application/x-x68k-xdf-rom";
+	private const string MIME_TYPE_HDF = "application/x-x68k-hdf-rom";
+	private const string MIME_TYPE_TGDB = "application/x-sharp-x68000-rom";
 	private const string PLATFORM = "SharpX68000";
 	private const string ICON_NAME = "media-floppy-symbolic";
 
@@ -23,7 +25,7 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 	}
 
 	public string[] get_mime_types () {
-		return { MIME_TYPE_DIM, MIME_TYPE_XDF };
+		return { MIME_TYPE_DIM, MIME_TYPE_XDF, MIME_TYPE_HDF };
 	}
 
 	public async Game? query_game_for_uri (Uri uri) {
@@ -53,7 +55,7 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 		var file_info = file.query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
 		var mime_type = file_info.get_content_type ();
 
-		if (mime_type != MIME_TYPE_DIM && mime_type != MIME_TYPE_XDF)
+		if (mime_type != MIME_TYPE_DIM && mime_type != MIME_TYPE_XDF && mime_type != MIME_TYPE_HDF)
 			return;
 
 		var path = file.get_path ();
@@ -158,14 +160,13 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 		var uid = new FingerprintUid (uri, FINGERPRINT_PREFIX);
 		var title = new FilenameTitle (uri);
 		var icon = new DummyIcon ();
-		var media = new GriloMedia (title, mime_type);
+		var media = new GriloMedia (title, MIME_TYPE_TGDB);
 		var cover = new CompositeCover ({
 			new LocalCover (uri),
 			new GriloCover (media, uid)});
 		var core_source = new RetroCoreSource (PLATFORM, get_mime_types ());
 		RetroRunner runner = new RetroRunner.for_media_set (core_source, media_set, uid, title);
 
-		print (uri.to_string ());
 		return new GenericGame (title, icon, cover, runner);
 	}
 
@@ -173,7 +174,7 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 		var uid = new FingerprintUid (uri, FINGERPRINT_PREFIX);
 		var title = new FilenameTitle (uri);
 		var icon = new DummyIcon ();
-		var media = new GriloMedia (title, mime_type);
+		var media = new GriloMedia (title, MIME_TYPE_TGDB);
 		var cover = new CompositeCover ({
 			new LocalCover (uri),
 			new GriloCover (media, uid)});

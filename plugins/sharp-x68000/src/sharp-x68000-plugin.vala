@@ -3,9 +3,10 @@
 private class Games.SharpX68000Plugin : Object, Plugin {
 	private const string MIME_TYPE_DIM = "application/x-x68k-rom";
 	private const string MIME_TYPE_XDF = "application/x-x68k-xdf-rom";
+	private const string MIME_TYPE_HDF = "application/x-x68k-hdf-rom";
 
 	public string[] get_mime_types () {
-		return { MIME_TYPE_DIM, MIME_TYPE_XDF };
+		return { MIME_TYPE_DIM, MIME_TYPE_XDF, MIME_TYPE_HDF };
 	}
 
 	public UriGameFactory[] get_uri_game_factories () {

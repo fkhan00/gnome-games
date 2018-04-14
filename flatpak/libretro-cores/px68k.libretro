@@ -8,7 +8,7 @@ Authors=hissorii;
 License=???;
 
 [Platform:SharpX68000]
-MimeType=application/x-x68k-rom;application/x-x68k-xdf-rom;
+MimeType=application/x-x68k-rom;application/x-x68k-xdf-rom;application/x-x68k-hdf-rom;
 Firmwares=CGROM;IPLROM;IPL30ROM;
 
 [Firmware:CGROM]
