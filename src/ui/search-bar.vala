@@ -16,4 +16,8 @@ private class Games.SearchBar : Gtk.SearchBar {
 	private void on_search_activated () {
 		text = entry.text;
 	}
+
+	public void set_search (string query) {
+		entry.text = query;
+	}
 }

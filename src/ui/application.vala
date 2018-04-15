@@ -9,6 +9,8 @@ public class Games.Application : Gtk.Application {
 	private ShortcutsWindow shortcuts_window;
 	private ApplicationWindow window;
 	private bool game_list_loaded;
+	private SearchProvider search_provider;
+	private uint search_provider_id;
 
 	private GameCollection game_collection;
 
@@ -43,6 +45,23 @@ public class Games.Application : Gtk.Application {
 		while (manette_iterator.next (out manette_device))
 			on_device_connected (manette_device);
 		manette_monitor.device_connected.connect (on_device_connected);
+
+		init_game_sources ();
+
+		game_collection.search_games.begin ();
+		search_provider = new SearchProvider (game_collection);
+		search_provider.activate.connect ((timestamp, game) => {
+			ensure_window ();
+			window.present_with_time (timestamp);
+			window.run_game (game);
+		});
+		search_provider.run_search.connect ((timestamp, terms) => {
+			var str = string.joinv (" ", terms);
+
+			ensure_window ();
+			window.present_with_time (timestamp);
+			window.start_search (str);
+		});
 	}
 
 	private void add_actions () {
@@ -179,6 +198,24 @@ public class Games.Application : Gtk.Application {
 		open_async.begin (files, hint);
 	}
 
+	protected override bool dbus_register (DBusConnection connection, string object_path) {
+		var path = object_path + "/SearchProvider";
+		try {
+			search_provider_id = connection.register_object (path, search_provider);
+		} catch (IOError e) {
+			warning ("Could not register search provider: %s", e.message);
+		}
+
+		return true;
+	}
+
+	protected override void dbus_unregister (DBusConnection connection, string object_path) {
+		if (search_provider_id != 0) {
+			connection.unregister_object (search_provider_id);
+			search_provider_id = 0;
+		}
+	}
+
 	private async void open_async (File[] files, string hint) {
 		if (window == null)
 			activate ();
@@ -198,20 +235,26 @@ public class Games.Application : Gtk.Application {
 			// TODO Display an error
 	}
 
+	private void ensure_window () {
+		if (window == null) {
+			Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
+
+			var screen = Gdk.Screen.get_default ();
+			var provider = load_css ("gtk-style.css");
+			Gtk.StyleContext.add_provider_for_screen (screen, provider, 600);
+
+			load_game_list.begin ();
+
+			window = new ApplicationWindow (game_collection.get_list_store ());
+			window.destroy.connect (() => {
+				quit_application ();
+			});
+			this.add_window (window);
+		}
+	}
+
 	protected override void activate () {
-		Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
-
-		var screen = Gdk.Screen.get_default ();
-		var provider = load_css ("gtk-style.css");
-		Gtk.StyleContext.add_provider_for_screen (screen, provider, 600);
-
-		load_game_list.begin ();
-
-		window = new ApplicationWindow (game_collection.get_list_store ());
-		this.add_window (window);
-		window.destroy.connect (() => {
-			quit_application ();
-		});
+		ensure_window ();
 		window.show ();
 
 		GLib.Timeout.add (500, show_loading_notification);
@@ -393,6 +436,7 @@ public class Games.Application : Gtk.Application {
 		if (window != null && !window.quit_game ())
 			return;
 
+		window = null;
 		quit ();
 	}
 

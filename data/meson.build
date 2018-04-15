@@ -33,6 +33,17 @@ i18n.merge_file ('appdata-file',
   install_dir: join_paths (datadir, 'metainfo')
 )
 
+dbus_conf = configuration_data()
+dbus_conf.set('appid', application_id)
+dbus_conf.set('bindir', bindir)
+configure_file (
+  input: 'org.gnome.Games.service.in',
+  output: '@0@.service'.format(application_id),
+  configuration: dbus_conf,
+  install: true,
+  install_dir: servicedir
+)
+
 gsettings_conf = configuration_data ()
 gsettings_conf.set ('GETTEXT_PACKAGE', meson.project_name ())
 configure_file (
@@ -41,6 +52,17 @@ configure_file (
   configuration: gsettings_conf,
   install: true,
   install_dir: join_paths(datadir, 'glib-2.0', 'schemas'),
+)
+
+search_provider_conf = configuration_data()
+search_provider_conf.set('appid', application_id)
+search_provider_conf.set('profile', profile)
+configure_file(
+  configuration: search_provider_conf,
+  input: 'org.gnome.Games.search-provider.ini.in',
+  install_dir: join_paths(datadir, 'gnome-shell', 'search-providers'),
+  install: true,
+  output: '@0@.search-provider.ini'.format(application_id)
 )
 
 subdir ('icons')

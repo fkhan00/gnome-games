@@ -114,6 +114,8 @@ vala_sources = [
   'retro/retro-simple-type.vala',
   'retro/retro-simple-types.vala',
 
+  'search-provider/search-provider.vala',
+
   'tracker/mime-type-tracker-uri-query.vala',
   'tracker/tracker-error.vala',
   'tracker/tracker-uri-iterator.vala',

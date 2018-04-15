@@ -66,6 +66,18 @@ private class Games.GameCollection : Object {
 		return games[0];
 	}
 
+	public List<Game> get_games () {
+		List<Game> result = games.get_values ();
+
+		CompareFunc<Game> compare_func = (a, b) => {
+			return a.name.collate (b.name);
+		};
+
+		result.sort (compare_func);
+
+		return result;
+	}
+
 	public async void search_games () {
 		foreach (var source in sources)
 			foreach (var uri in source)

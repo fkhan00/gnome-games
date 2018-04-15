@@ -168,4 +168,8 @@ private class Games.CollectionBox : Gtk.Box {
 	public bool search_bar_handle_event (Gdk.Event event) {
 		return search_bar.handle_event (event);
 	}
+
+	public void set_search (string query) {
+		search_bar.set_search (query);
+	}
 }
