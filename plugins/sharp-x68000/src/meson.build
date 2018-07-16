@@ -1,4 +1,5 @@
 vala_sources = [
+  'sharp-x68000-game-factory.vala',
   'sharp-x68000-plugin.vala',
 ]
 
