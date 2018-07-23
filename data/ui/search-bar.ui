@@ -4,11 +4,17 @@
   <template class="GamesSearchBar" parent="GtkSearchBar">
     <property name="visible">True</property>
     <child>
-      <object class="GtkSearchEntry" id="entry">
+      <object class="HdyColumn" type-func="hdy_column_get_type">
         <property name="visible">True</property>
-        <property name="width-chars">40</property>
-        <signal name="search-changed" handler="on_search_changed"/>
-        <signal name="activate" handler="on_search_activated"/>
+        <property name="hexpand">True</property>
+        <property name="maximum_width">600</property>
+        <child>
+          <object class="GtkSearchEntry" id="entry">
+            <property name="visible">True</property>
+            <signal name="search-changed" handler="on_search_changed"/>
+            <signal name="activate" handler="on_search_activated"/>
+          </object>
+        </child>
       </object>
     </child>
   </template>
