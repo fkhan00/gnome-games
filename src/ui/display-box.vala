@@ -1,7 +1,7 @@
 // This file is part of GNOME Games. License: GPL-3.0+.
 
 [GtkTemplate (ui = "/org/gnome/Games/ui/display-box.ui")]
-private class Games.DisplayBox : Gtk.EventBox {
+private class Games.DisplayBox : Gtk.Bin {
 	private const uint INACTIVITY_TIME_MILLISECONDS = 2000;
 
 	public signal void back ();
@@ -36,7 +36,7 @@ private class Games.DisplayBox : Gtk.EventBox {
 	[GtkChild]
 	private ErrorDisplay error_display;
 	[GtkChild]
-	private Gtk.EventBox display_bin;
+	private Gtk.Bin display_bin;
 	[GtkChild]
 	private Gtk.Revealer fullscreen_header_bar_revealer;
 	[GtkChild]
