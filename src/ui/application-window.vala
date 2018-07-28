@@ -232,17 +232,9 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 	}
 
 	[GtkCallback]
-	public bool on_button_pressed (Gdk.EventButton event) {
-		// Mouse button 8 is the navigation previous button
-		if (event.button == 8) {
-			if (ui_state != UiState.DISPLAY)
-				return false;
-
+	public void on_button_pressed (Gtk.GestureMultiPress gesture, int n_press, double x, double y) {
+		if (ui_state == UiState.DISPLAY)
 			on_display_back ();
-			return true;
-		}
-
-		return false;
 	}
 
 	[GtkCallback]
