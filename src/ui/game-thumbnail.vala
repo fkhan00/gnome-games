@@ -60,7 +60,7 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 
 	public struct DrawingContext {
 		Cairo.Context cr;
-		Gdk.Window? window;
+		Gdk.Surface? surface;
 		Gtk.StyleContext style;
 		Gtk.StateFlags state;
 		int width;
@@ -72,14 +72,14 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 	}
 
 	public override bool draw (Cairo.Context cr) {
-		var window = get_window ();
+		var surface = get_surface ();
 		var style = get_style_context ();
 		var state = get_state_flags ();
 		var width = get_allocated_width ();
 		var height = get_allocated_height ();
 
 		DrawingContext context = {
-			cr, window, style, state, width, height
+			cr, surface, style, state, width, height
 		};
 
 		if (icon == null)
@@ -289,7 +289,7 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 	}
 
 	private void draw_pixbuf (DrawingContext context, Gdk.Pixbuf pixbuf) {
-		var surface = Gdk.cairo_surface_create_from_pixbuf (pixbuf, 1, context.window);
+		var surface = Gdk.cairo_surface_create_from_pixbuf (pixbuf, 1, context.surface);
 
 		var mask = get_mask (context);
 

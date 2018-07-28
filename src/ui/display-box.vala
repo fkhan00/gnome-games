@@ -115,20 +115,20 @@ private class Games.DisplayBox : Gtk.Bin {
 	}
 
 	private void show_cursor (bool show) {
-		var window = get_window ();
-		if (window == null)
+		var surface = get_surface ();
+		if (surface == null)
 			return;
 
-		if ((show && window.cursor == null) ||
-		    (!show && window.cursor != null))
+		if ((show && surface.cursor == null) ||
+		    (!show && surface.cursor != null))
 			return;
 
 		if (!show) {
-			var display = window.get_display ();
-			window.cursor = new Gdk.Cursor.for_display (display, Gdk.CursorType.BLANK_CURSOR);
+			var display = surface.get_display ();
+			surface.cursor = new Gdk.Cursor.for_display (display, Gdk.CursorType.BLANK_CURSOR);
 		}
 		else
-			window.cursor = null;
+			surface.cursor = null;
 	}
 
 	private void set_display (Gtk.Widget display) {
