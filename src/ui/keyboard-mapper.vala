@@ -9,6 +9,8 @@ private class Games.KeyboardMapper : Gtk.Box {
 	[GtkChild]
 	private Gtk.Label info_message;
 
+	private Gtk.EventControllerKey controller;
+
 	private KeyboardMappingBuilder mapping_builder;
 	private GamepadInput[] mapping_inputs;
 	private GamepadInput input;
@@ -26,6 +28,8 @@ private class Games.KeyboardMapper : Gtk.Box {
 		catch (Error e) {
 			critical ("Could not set up gamepad view: %s", e.message);
 		}
+		controller = new Gtk.EventControllerKey ();
+		controller.key_released.connect (on_keyboard_event);
 	}
 
 	public void start () {
@@ -46,18 +50,16 @@ private class Games.KeyboardMapper : Gtk.Box {
 	}
 
 	private void connect_to_keyboard () {
-		get_toplevel ().key_release_event.connect (on_keyboard_event);
+		get_toplevel ().add_controller (controller);
 	}
 
 	private void disconnect_from_keyboard () {
-		get_toplevel ().key_release_event.disconnect (on_keyboard_event);
+		get_toplevel ().remove_controller (controller);
 	}
 
-	private bool on_keyboard_event (Gdk.EventKey key) {
-		if (mapping_builder.set_input_mapping (input, key.hardware_keycode))
+	private void on_keyboard_event (Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
+		if (mapping_builder.set_input_mapping (input, keycode))
 			next_input ();
-
-		return true;
 	}
 
 	private void next_input () {

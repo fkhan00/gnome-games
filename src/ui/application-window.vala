@@ -215,11 +215,11 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 	}
 
 	[GtkCallback]
-	public bool on_key_pressed (Gdk.EventKey event) {
+	public bool on_key_pressed (Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
 		var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
-		if ((event.keyval == Gdk.Key.q || event.keyval == Gdk.Key.Q) &&
-		    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+		if ((keyval == Gdk.Key.q || keyval == Gdk.Key.Q) &&
+		    (state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
 			if (!quit_game ())
 				return false;
 
@@ -228,7 +228,7 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 			return true;
 		}
 
-		return handle_collection_key_event (event) || handle_display_key_event (event);
+		return handle_collection_key_event (keyval, state) || handle_display_key_event (keyval, state);
 	}
 
 	[GtkCallback]
@@ -587,31 +587,33 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 		return true;
 	}
 
-	private bool handle_collection_key_event (Gdk.EventKey event) {
+	private bool handle_collection_key_event (uint keyval, Gdk.ModifierType state) {
 		if (ui_state != UiState.COLLECTION)
 			return false;
 
 		var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
-		if ((event.keyval == Gdk.Key.f || event.keyval == Gdk.Key.F) &&
-		    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+		if ((keyval == Gdk.Key.f || keyval == Gdk.Key.F) &&
+		    (state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
 			if (!search_mode)
 				search_mode = true;
 
 			return true;
 		}
 
+		// TODO: Replace with gtk_search_bar_set_key_capture_widget()
+		var event = Gtk.get_current_event ();
 		return collection_box.search_bar_handle_event (event);
 	}
 
-	private bool handle_display_key_event (Gdk.EventKey event) {
+	private bool handle_display_key_event (uint keyval, Gdk.ModifierType state) {
 		if (ui_state != UiState.DISPLAY)
 			return false;
 
 		var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
-		if ((event.keyval == Gdk.Key.f || event.keyval == Gdk.Key.F) &&
-		    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK &&
+		if ((keyval == Gdk.Key.f || keyval == Gdk.Key.F) &&
+		    (state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK &&
 		    display_header_bar.can_fullscreen) {
 			is_fullscreen = !is_fullscreen;
 			settings.set_boolean ("fullscreen", is_fullscreen);
@@ -619,23 +621,23 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 			return true;
 		}
 
-		if (event.keyval == Gdk.Key.F11 && display_header_bar.can_fullscreen) {
+		if (keyval == Gdk.Key.F11 && display_header_bar.can_fullscreen) {
 			is_fullscreen = !is_fullscreen;
 			settings.set_boolean ("fullscreen", is_fullscreen);
 
 			return true;
 		}
 
-		if (event.keyval == Gdk.Key.Escape && display_header_bar.can_fullscreen) {
+		if (keyval == Gdk.Key.Escape && display_header_bar.can_fullscreen) {
 			is_fullscreen = false;
 			settings.set_boolean ("fullscreen", false);
 
 			return true;
 		}
 
-		if (((event.state & default_modifiers) == Gdk.ModifierType.MOD1_MASK) &&
-		    (((get_direction () == Gtk.TextDirection.LTR) && event.keyval == Gdk.Key.Left) ||
-		     ((get_direction () == Gtk.TextDirection.RTL) && event.keyval == Gdk.Key.Right))) {
+		if (((state & default_modifiers) == Gdk.ModifierType.MOD1_MASK) &&
+		    (((get_direction () == Gtk.TextDirection.LTR) && keyval == Gdk.Key.Left) ||
+		     ((get_direction () == Gtk.TextDirection.RTL) && keyval == Gdk.Key.Right))) {
 			on_display_back ();
 
 			return true;
