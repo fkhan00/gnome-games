@@ -73,10 +73,8 @@ private class Games.DisplayBox : Gtk.EventBox {
 	}
 
 	[GtkCallback]
-	private bool on_motion_event (Gdk.EventMotion event) {
+	private void on_motion_event (Gtk.EventControllerMotion controller, double x, double y) {
 		on_activity ();
-
-		return false;
 	}
 
 	private void on_activity () {
