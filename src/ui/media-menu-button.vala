@@ -4,9 +4,6 @@
 private class Games.MediaMenuButton : Gtk.MenuButton {
 	public MediaSet media_set { set; get; }
 
-	[GtkChild]
-	private Gtk.Image media_image;
-
 	[GtkCallback]
 	private void on_media_set_changed () {
 		if (media_set == null || media_set.get_size () < 2) {
@@ -15,7 +12,7 @@ private class Games.MediaMenuButton : Gtk.MenuButton {
 			return;
 		}
 
-		media_image.set_from_gicon (media_set.icon);
+		icon_name = media_set.icon.to_string ();
 
 		show ();
 	}

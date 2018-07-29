@@ -11,20 +11,11 @@
         <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="use-underline">True</property>
+        <property name="icon-name">go-previous-symbolic</property>
         <signal name="clicked" handler="on_back_clicked"/>
-        <style>
-          <class name="image-button"/>
-        </style>
         <child internal-child="accessible">
           <object class="AtkObject" id="a11y-back">
             <property name="accessible-name" translatable="yes">Back</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkImage" id="back_image">
-            <property name="visible">True</property>
-            <property name="icon-name">go-previous-symbolic</property>
-            <property name="icon-size">1</property>
           </object>
         </child>
       </object>
@@ -34,20 +25,11 @@
         <property name="visible">False</property>
         <property name="valign">center</property>
         <property name="use-underline">True</property>
+        <property name="icon-name">view-fullscreen-symbolic</property>
         <signal name="clicked" handler="on_fullscreen_clicked"/>
-        <style>
-          <class name="image-button"/>
-        </style>
         <child internal-child="accessible">
           <object class="AtkObject" id="a11y-fullscreen">
             <property name="accessible-name" translatable="yes">Fullscreen</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkImage" id="fullscreen_image">
-            <property name="visible">True</property>
-            <property name="icon-name">view-fullscreen-symbolic</property>
-            <property name="icon-size">1</property>
           </object>
         </child>
       </object>
@@ -60,20 +42,11 @@
         <property name="visible">False</property>
         <property name="valign">center</property>
         <property name="use-underline">True</property>
+        <property name="icon-name">view-restore-symbolic</property>
         <signal name="clicked" handler="on_restore_clicked"/>
-        <style>
-          <class name="image-button"/>
-        </style>
         <child internal-child="accessible">
           <object class="AtkObject" id="a11y-restore">
             <property name="accessible-name" translatable="yes">Restore</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkImage" id="restore_image">
-            <property name="visible">True</property>
-            <property name="icon-name">view-restore-symbolic</property>
-            <property name="icon-size">1</property>
           </object>
         </child>
       </object>
