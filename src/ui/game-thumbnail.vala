@@ -71,22 +71,24 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		set_css_name ("gamesgamethumbnail");
 	}
 
-	public override bool draw (Cairo.Context cr) {
+	construct {
+		set_draw_func (draw);
+	}
+
+	public void draw (Gtk.DrawingArea area, Cairo.Context cr, int width, int height) {
 		var surface = get_surface ();
 		var style = get_style_context ();
 		var state = get_state_flags ();
-		var width = get_allocated_width ();
-		var height = get_allocated_height ();
 
 		DrawingContext context = {
 			cr, surface, style, state, width, height
 		};
 
 		if (icon == null)
-			return false;
+			return;
 
 		if (cover == null)
-			return false;
+			return;
 
 		var drawn = false;
 
@@ -98,8 +100,6 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		// Draw the default thumbnail if no thumbnail have been drawn
 		if (!drawn)
 			draw_default (context);
-
-		return true;
 	}
 
 	public bool draw_icon (DrawingContext context) {
