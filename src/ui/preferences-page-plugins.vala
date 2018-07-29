@@ -28,8 +28,5 @@ private class Games.PreferencesPagePlugins: Gtk.Bin, PreferencesPage {
 		var row = new Gtk.ListBoxRow ();
 		row.add (item);
 		list_box.add (row);
-
-		item.show ();
-		row.show ();
 	}
 }
