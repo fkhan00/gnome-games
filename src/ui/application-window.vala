@@ -207,8 +207,8 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 		return result;
 	}
 
-	public override void size_allocate (Gtk.Allocation allocation) {
-		base.size_allocate (allocation);
+	public override void size_allocate (Gtk.Allocation allocation, int baseline) {
+		base.size_allocate (allocation, baseline);
 
 		if (window_size_update_timeout == -1 && !is_maximized)
 			window_size_update_timeout = Timeout.add (WINDOW_SIZE_UPDATE_DELAY_MILLISECONDS, store_window_size);
