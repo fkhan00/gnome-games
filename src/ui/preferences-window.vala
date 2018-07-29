@@ -22,7 +22,7 @@ private class Games.PreferencesWindow : Gtk.Window {
 				titlebar_box.remove (_right_header_bar);
 			if (value != null) {
 				titlebar_box.pack_end (value);
-				value.show_close_button = !immersive_mode;
+				value.show_title_buttons = !immersive_mode;
 			}
 			_right_header_bar = value;
 		}
@@ -37,7 +37,7 @@ private class Games.PreferencesWindow : Gtk.Window {
 			separator.visible = !value;
 			sidebar_vbox.visible = !value;
 			if (right_header_bar != null)
-				right_header_bar.show_close_button = !value;
+				right_header_bar.show_title_buttons = !value;
 
 			_immersive_mode = value;
 		}
