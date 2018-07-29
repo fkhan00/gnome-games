@@ -123,10 +123,8 @@ private class Games.DisplayBox : Gtk.Bin {
 		    (!show && surface.cursor != null))
 			return;
 
-		if (!show) {
-			var display = surface.get_display ();
-			surface.cursor = new Gdk.Cursor.for_display (display, Gdk.CursorType.BLANK_CURSOR);
-		}
+		if (!show)
+			surface.cursor = new Gdk.Cursor.from_name ("none", null);
 		else
 			surface.cursor = null;
 	}
