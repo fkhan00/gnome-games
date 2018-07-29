@@ -96,6 +96,7 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 	private ResumeFailedDialog resume_failed_dialog;
 	private QuitDialog quit_dialog;
 
+	private Gdk.SurfaceState state;
 	private long window_size_update_timeout;
 	private long focus_out_timeout_id;
 
@@ -158,6 +159,10 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 
 		if (Config.PROFILE == "Devel")
 			get_style_context ().add_class ("devel");
+
+		var surface = get_surface ();
+		state = surface.state;
+		surface.notify["state"].connect(on_surface_state_changed);
 	}
 
 	public void run_game (Game game) {
@@ -237,18 +242,21 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 			on_display_back ();
 	}
 
-	[GtkCallback]
-	public bool on_window_state_event (Gdk.EventWindowState event) {
-		var is_maximized = (bool) (event.new_window_state & Gdk.WindowState.MAXIMIZED);
+	public void on_surface_state_changed () {
+		var surface = get_surface ();
+		var changed_mask = state ^ surface.state;
+		state = surface.state;
+
+		var is_maximized = (bool) (state & Gdk.SurfaceState.MAXIMIZED);
 		settings.set_boolean ("window-maximized", is_maximized);
 
-		is_fullscreen = (bool) (event.new_window_state & Gdk.WindowState.FULLSCREEN);
+		is_fullscreen = (bool) (state & Gdk.SurfaceState.FULLSCREEN);
 		update_pause (false);
 
-		if (!(bool) (event.changed_mask & Gdk.WindowState.FOCUSED))
-			return false;
+		if (!(bool) (changed_mask & Gdk.SurfaceState.FOCUSED))
+			return;
 
-		var focused = (bool) (event.new_window_state & Gdk.WindowState.FOCUSED);
+		var focused = (bool) (state & Gdk.SurfaceState.FOCUSED);
 		var playing = (ui_state == UiState.DISPLAY);
 
 		if (focused && playing)
@@ -256,8 +264,6 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 
 		if (!focused)
 			uninhibit (Gtk.ApplicationInhibitFlags.IDLE);
-
-		return false;
 	}
 
 	public bool gamepad_button_press_event (Manette.Event event) {
