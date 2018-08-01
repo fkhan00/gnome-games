@@ -415,12 +415,10 @@ public class Games.Application : Gtk.Application {
 
 	private static Gtk.CssProvider load_css (string css) {
 		var provider = new Gtk.CssProvider ();
-		try {
-			var file = File.new_for_uri("resource:///org/gnome/Games/" + css);
-			provider.load_from_file (file);
-		} catch (GLib.Error e) {
-			warning ("Loading CSS file “%s” failed: %s", css, e.message);
-		}
+
+		var file = File.new_for_uri("resource:///org/gnome/Games/" + css);
+		provider.load_from_file (file);
+
 		return provider;
 	}
 
