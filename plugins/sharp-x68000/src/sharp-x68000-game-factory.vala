@@ -7,21 +7,24 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 	private const string MIME_TYPE_HDF = "application/x-x68k-hdf-rom";
 	private const string MIME_TYPE_TGDB = "application/x-sharp-x68000-rom";
 	private const string PLATFORM = "SharpX68000";
+	private const string PLATFORM_NAME = "Sharp X68000";
 	private const string ICON_NAME = "media-floppy-symbolic";
 
 	private HashTable<string, PartialGameData?> uris_for_game;
 	private HashTable<Uri, Game> game_for_uri;
 	private GenericSet<Game> games;
+	private Platform platform;
 
 	private struct PartialGameData {
 		Uri?[] uris;
 		string?[] titles;
 	}
 
-	public SharpX68000GameFactory () {
+	public SharpX68000GameFactory (Platform platform) {
 		uris_for_game = new HashTable<string, PartialGameData?> (str_hash, str_equal);
 		game_for_uri = new HashTable<Uri, Game> (Uri.hash, Uri.equal);
 		games = new GenericSet<Game> (direct_hash, direct_equal);
+		this.platform = platform;
 	}
 
 	public string[] get_mime_types () {
@@ -159,15 +162,33 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 	private Game create_multi_disk_game (Uri uri, MediaSet media_set, string mime_type) throws Error {
 		var uid = new FingerprintUid (uri, FINGERPRINT_PREFIX);
 		var title = new FilenameTitle (uri);
-		var icon = new DummyIcon ();
 		var media = new GriloMedia (title, MIME_TYPE_TGDB);
 		var cover = new CompositeCover ({
 			new LocalCover (uri),
 			new GriloCover (media, uid)});
-		var core_source = new RetroCoreSource (PLATFORM, get_mime_types ());
+		var release_date = new GriloReleaseDate (media, uid);
+		var cooperative = new GriloCooperative (media, uid);
+		var genre = new GriloGenre (media, uid);
+		var players = new GriloPlayers (media, uid);
+		var developer = new GriloDeveloper (media);
+		var publisher = new GriloPublisher (media);
+		var description = new GriloDescription (media);
+		var rating = new GriloRating (media);
+		var core_source = new RetroCoreSource (platform, get_mime_types ());
 		RetroRunner runner = new RetroRunner.for_media_set (core_source, media_set, uid, title);
 
-		return new GenericGame (title, icon, cover, runner);
+		var game = new GenericGame (uid, title, platform, runner);
+		game.set_cover (cover);
+		game.set_release_date (release_date);
+		game.set_cooperative (cooperative);
+		game.set_genre (genre);
+		game.set_players (players);
+		game.set_developer (developer);
+		game.set_publisher (publisher);
+		game.set_description (description);
+		game.set_rating (rating);
+
+		return game;
 	}
 
 	private Game create_game (Uri uri, string mime_type) throws Error {
@@ -178,9 +199,28 @@ public class Games.SharpX68000GameFactory : Object, UriGameFactory {
 		var cover = new CompositeCover ({
 			new LocalCover (uri),
 			new GriloCover (media, uid)});
-		var core_source = new RetroCoreSource (PLATFORM, get_mime_types ());
+		var release_date = new GriloReleaseDate (media, uid);
+		var cooperative = new GriloCooperative (media, uid);
+		var genre = new GriloGenre (media, uid);
+		var players = new GriloPlayers (media, uid);
+		var developer = new GriloDeveloper (media);
+		var publisher = new GriloPublisher (media);
+		var description = new GriloDescription (media);
+		var rating = new GriloRating (media);
+		var core_source = new RetroCoreSource (platform, get_mime_types ());
 		RetroRunner runner = new RetroRunner (core_source, uri, uid, title);
 
-		return new GenericGame (title, icon, cover, runner);
+		var game = new GenericGame (uid, title, platform, runner);
+		game.set_cover (cover);
+		game.set_release_date (release_date);
+		game.set_cooperative (cooperative);
+		game.set_genre (genre);
+		game.set_players (players);
+		game.set_developer (developer);
+		game.set_publisher (publisher);
+		game.set_description (description);
+		game.set_rating (rating);
+
+		return game;
 	}
 }
