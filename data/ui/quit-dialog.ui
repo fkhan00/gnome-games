@@ -10,14 +10,12 @@
     <property name="secondary_text" translatable="yes">All unsaved progress will be lost.</property>
     <child type="action">
       <object class="GtkButton" id="button_cancel">
-        <property name="visible">True</property>
         <property name="can-default">True</property>
         <property name="label" translatable="yes">Cancel</property>
       </object>
     </child>
     <child type="action">
       <object class="GtkButton" id="button_quit">
-        <property name="visible">True</property>
         <property name="label" translatable="yes">Quit</property>
         <style>
           <class name="destructive-action"/>

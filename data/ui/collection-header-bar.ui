@@ -2,10 +2,8 @@
 <interface>
   <requires lib="gtk+" version="3.16"/>
   <template class="GamesCollectionHeaderBar" parent="GtkHeaderBar">
-    <property name="visible">True</property>
     <child>
       <object class="GtkButton" id="add_game">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="use-underline">True</property>
         <property name="action-name">app.add-game-files</property>
@@ -27,7 +25,6 @@
         <property name="tooltip_text" translatable="yes">Menu</property>
         <property name="use-underline">True</property>
         <property name="valign">center</property>
-        <property name="visible">True</property>
         <property name="icon-name">open-menu-symbolic</property>
       </object>
       <packing>
@@ -36,16 +33,12 @@
     </child>
     <child type="title">
       <object class="GtkStack" id="title_stack">
-        <property name="visible">True</property>
         <property name="transition-type">GTK_STACK_TRANSITION_TYPE_CROSSFADE</property>
         <child>
-          <object class="GtkStackSwitcher" id="view_switcher">
-            <property name="visible">True</property>
-          </object>
+          <object class="GtkStackSwitcher" id="view_switcher" />
         </child>
         <child>
           <object class="GtkLabel" id="empty_title">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Games</property>
             <style>
               <class name="title"/>
@@ -56,7 +49,6 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="search">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="use-underline">True</property>
         <property name="icon-name">edit-find-symbolic</property>
@@ -77,20 +69,17 @@
       <object class="GtkBox">
         <property name="margin">12</property>
         <property name="orientation">vertical</property>
-        <property name="visible">True</property>
         <child>
           <object class="GtkModelButton">
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">Preferences</property>
             <property name="action-name">app.preferences</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkSeparator">
             <property name="margin-top">6</property>
             <property name="margin-bottom">6</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
@@ -98,7 +87,6 @@
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">Shortcuts</property>
             <property name="action-name">app.shortcuts</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
@@ -106,7 +94,6 @@
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">Help</property>
             <property name="action-name">app.help</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
@@ -114,7 +101,6 @@
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">About</property>
             <property name="action-name">app.about</property>
-            <property name="visible">True</property>
           </object>
         </child>
       </object>

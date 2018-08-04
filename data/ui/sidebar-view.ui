@@ -2,18 +2,15 @@
 <interface>
   <requires lib="gtk+" version="3.16"/>
   <template class="GamesSidebarView" parent="GtkBox">
-    <property name="visible">True</property>
     <property name="expand">True</property>
     <signal name="map" after="yes" handler="on_map"/>
     <signal name="unmap" after="no" handler="on_unmap"/>
     <child>
       <object class="GtkScrolledWindow">
-        <property name="visible">True</property>
         <property name="vexpand">True</property>
         <property name="width_request">250</property>
         <child>
           <object class="GtkListBox" id="list_box">
-            <property name="visible">True</property>
             <signal name="row-activated" handler="on_list_box_row_activated"/>
             <signal name="row-selected" handler="on_list_box_row_selected"/>
             <style>
@@ -25,7 +22,6 @@
     </child>
     <child>
       <object class="GamesCollectionIconView" id="collection_view">
-        <property name="visible">True</property>
         <property name="expand">True</property>
       </object>
     </child>

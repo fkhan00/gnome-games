@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GamesPlatformListItem" parent="GtkLabel">
-    <property name="visible">true</property>
     <property name="vexpand">true</property>
     <property name="margin">6</property>
     <property name="wrap">true</property>

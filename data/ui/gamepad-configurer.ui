@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GamesGamepadConfigurer" parent="GtkBox">
-    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkStack" id="stack">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <child>
-          <object class="GtkBox" id="gamepad_mapper_holder">
-            <property name="visible">True</property>
-          </object>
+          <object class="GtkBox" id="gamepad_mapper_holder"/>
           <packing>
             <property name="name">gamepad_mapper</property>
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="gamepad_tester_holder">
-            <property name="visible">True</property>
-          </object>
+          <object class="GtkBox" id="gamepad_tester_holder"/>
           <packing>
             <property name="name">gamepad_tester</property>
           </packing>
@@ -28,10 +22,8 @@
     </child>
     <child>
       <object class="GtkActionBar" id="action_bar">
-        <property name="visible">True</property>
         <child>
           <object class="GtkButton" id="reset_button">
-            <property name="visible">True</property>
             <property name="label" translatable="yes" context="Gamepad configuration factory reset">Reset</property>
             <signal name="clicked" handler="on_reset_clicked"/>
             <style>
@@ -44,7 +36,6 @@
         </child>
         <child>
           <object class="GtkButton" id="configure_button">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Configure</property>
             <signal name="clicked" handler="on_configure_clicked"/>
             <style>
@@ -59,11 +50,9 @@
     </child>
   </template>
   <object class="GtkHeaderBar" id="header_bar">
-    <property name="visible">True</property>
     <property name="expand">True</property>
     <child>
       <object class="GtkButton" id="back_button">
-        <property name="visible">True</property>
         <property name="icon-name">go-previous-symbolic</property>
         <signal name="clicked" handler="on_back_clicked"/>
         <child internal-child="accessible">
@@ -78,7 +67,6 @@
     </child>
     <child>
       <object class="GtkButton" id="cancel_button">
-        <property name="visible">True</property>
         <property name="label" translatable="yes">Cancel</property>
         <signal name="clicked" handler="on_cancel_clicked"/>
         <style>

@@ -2,7 +2,6 @@
 <interface>
   <!-- interface-requires gtk+ 3.8 -->
   <template class="GamesPreferencesWindow" parent="GtkWindow">
-    <property name="visible">True</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="icon-name">builder</property>
     <property name="default-width">800</property>
@@ -10,11 +9,9 @@
     <property name="window-position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <child type="titlebar">
       <object class="GtkBox" id="titlebar_box">
-        <property name="visible">True</property>
         <child>
           <object class="GtkHeaderBar" id="left_header_bar">
             <property name="name">left_header_bar</property>
-            <property name="visible">True</property>
             <property name="title" translatable="yes">Preferences</property>
             <property name="show_title_buttons">True</property>
             <property name="decoration_layout">menu</property>
@@ -23,24 +20,20 @@
         <child>
           <object class="GtkSeparator" id="header_separator">
             <property name="orientation">vertical</property>
-            <property name="visible">True</property>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="hbox1">
-        <property name="visible">True</property>
         <child>
           <object class="GtkBox" id="sidebar_vbox">
             <property name="orientation">vertical</property>
-            <property name="visible">True</property>
             <child>
               <object class="GtkStackSidebar" id="sidebar">
                 <property name="margin-top">4</property>
                 <property name="stack">stack</property>
                 <property name="vexpand">True</property>
-                <property name="visible">True</property>
                 <property name="width-request">150</property>
                 <style>
                   <class name="preferences" />
@@ -52,37 +45,29 @@
         <child>
           <object class="GtkSeparator" id="separator">
             <property name="orientation">vertical</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkStack" id="stack">
-            <property name="visible">True</property>
             <property name="expand">True</property>
             <property name="visible-child">video_page</property>
             <property name="transition-type">GTK_STACK_TRANSITION_TYPE_CROSSFADE</property>
             <child>
-              <object class="GamesPreferencesPageVideo" id="video_page">
-                <property name="visible">True</property>
-              </object>
+              <object class="GamesPreferencesPageVideo" id="video_page"/>
               <packing>
                 <property name="name">video</property>
                 <property name="title" translatable="yes">Video</property>
               </packing>
             </child>
             <child>
-              <object class="GamesPreferencesPageControllers" id="controllers_page">
-                <property name="visible">True</property>
-              </object>
+              <object class="GamesPreferencesPageControllers" id="controllers_page"/>
               <packing>
                 <property name="name">controllers</property>
                 <property name="title" translatable="yes">Controllers</property>
               </packing>
             </child>
             <child>
-              <object class="GamesPreferencesPagePlugins" id="plugins_page">
-                <property name="visible">True</property>
-              </object>
+              <object class="GamesPreferencesPagePlugins" id="plugins_page"/>
               <packing>
                 <property name="name">plugins</property>
                 <property name="title" translatable="yes">Extensions</property>

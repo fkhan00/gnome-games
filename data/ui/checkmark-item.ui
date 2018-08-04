@@ -3,10 +3,8 @@
   <template class="GamesCheckmarkItem" parent="GtkBox">
     <property name="margin">6</property>
     <property name="spacing">12</property>
-    <property name="visible">true</property>
     <child>
       <object class="GtkLabel" id="title_label">
-        <property name="visible">true</property>
         <property name="vexpand">true</property>
         <property name="wrap">true</property>
       </object>
