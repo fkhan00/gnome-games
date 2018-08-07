@@ -21,6 +21,10 @@ private class Games.SegaCDPlugin : Object, Plugin {
 		platform_sega_cd_32x = new GenericPlatform (SEGA_CD_32X_PLATFORM_ID, SEGA_CD_32X_PLATFORM_NAME);
 	}
 
+	public Platform[] get_platforms () {
+		return { platform_sega_cd, platform_sega_cd_32x };
+	}
+
 	public string[] get_mime_types () {
 		return { CUE_MIME_TYPE, SEGA_CD_MIME_TYPE };
 	}
