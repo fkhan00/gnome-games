@@ -9,15 +9,17 @@
     <property name="default-height">500</property>
     <property name="window-position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <child type="titlebar">
-      <object class="GtkBox" id="titlebar_box">
+      <object class="HdyLeaflet" type-func="hdy_leaflet_get_type" id="titlebar_box">
         <property name="visible">True</property>
+        <property name="mode_transition_type">slide</property>
+        <property name="child_transition_type">slide</property>
+        <property name="fold">unfolded</property>
         <child>
           <object class="GtkHeaderBar" id="left_header_bar">
             <property name="name">left_header_bar</property>
             <property name="visible">True</property>
             <property name="title" translatable="yes">Preferences</property>
             <property name="show-close-button">True</property>
-            <property name="decoration_layout">menu</property>
           </object>
         </child>
         <child>
@@ -29,8 +31,12 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="hbox1">
+      <object class="HdyLeaflet" type-func="hdy_leaflet_get_type" id="main_box">
         <property name="visible">True</property>
+        <property name="mode_transition_type">slide</property>
+        <property name="child_transition_type">slide</property>
+        <property name="fold">unfolded</property>
+        <signal name="notify::fold" handler="main_box_notify_fold" after="yes" swapped="no"/>
         <child>
           <object class="GtkBox" id="sidebar_vbox">
             <property name="orientation">vertical</property>
@@ -61,6 +67,7 @@
             <property name="expand">True</property>
             <property name="visible-child">video_page</property>
             <property name="transition-type">GTK_STACK_TRANSITION_TYPE_CROSSFADE</property>
+            <property name="width-request">200</property>
             <child>
               <object class="GamesPreferencesPageVideo" id="video_page">
                 <property name="visible">True</property>
@@ -98,6 +105,12 @@
     <widgets>
       <widget name="left_header_bar"/>
       <widget name="sidebar"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="content_size_group">
+    <property name="mode">GTK_SIZE_GROUP_HORIZONTAL</property>
+    <widgets>
+      <widget name="stack"/>
     </widgets>
   </object>
 </interface>
