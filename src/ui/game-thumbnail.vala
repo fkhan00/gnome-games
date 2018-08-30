@@ -1,6 +1,6 @@
 // This file is part of GNOME Games. License: GPL-3.0+.
 
-private class Games.GameThumbnail: Gtk.DrawingArea {
+private class Games.GameThumbnail: Gtk.Bin {
 	private const Gtk.CornerType[] right_corners = { Gtk.CornerType.TOP_RIGHT, Gtk.CornerType.BOTTOM_RIGHT };
 	private const Gtk.CornerType[] bottom_corners = { Gtk.CornerType.BOTTOM_LEFT, Gtk.CornerType.BOTTOM_RIGHT };
 
@@ -54,13 +54,12 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 	}
 
 	private bool tried_loading_cover;
-	private Gdk.Pixbuf? cover_cache;
+	private Gdk.Texture? cover_cache;
 	private int previous_cover_width;
 	private int previous_cover_height;
 
 	public struct DrawingContext {
-		Cairo.Context cr;
-		Gdk.Surface? surface;
+		Gtk.Snapshot snapshot;
 		Gtk.StyleContext style;
 		int width;
 		int height;
@@ -70,16 +69,13 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		set_css_name ("gamesgamethumbnail");
 	}
 
-	construct {
-		set_draw_func (draw);
-	}
-
-	public void draw (Gtk.DrawingArea area, Cairo.Context cr, int width, int height) {
-		var surface = get_surface ();
+	public override void snapshot (Gtk.Snapshot snapshot) {
 		var style = get_style_context ();
+		var width = get_width ();
+		var height = get_height ();
 
 		DrawingContext context = {
-			cr, surface, style, width, height
+			snapshot, style, width, height
 		};
 
 		if (icon == null)
@@ -105,40 +101,40 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		if (g_icon == null)
 			return false;
 
-		var pixbuf = get_scaled_icon (context, g_icon, ICON_SCALE);
-		if (pixbuf == null)
+		var texture = get_scaled_icon (context, g_icon, ICON_SCALE);
+		if (texture == null)
 			return false;
 
-		draw_background (context);
-		draw_pixbuf (context, pixbuf);
-		draw_border (context);
+		draw_texture (context, texture);
 
 		return true;
 	}
 
 	public bool draw_cover (DrawingContext context) {
-		var pixbuf = get_scaled_cover (context);
-		if (pixbuf == null)
+		var texture = get_scaled_cover (context);
+		if (texture == null)
 			return false;
 
-		var border_radius = (int) context.style.get_property (Gtk.STYLE_PROPERTY_BORDER_RADIUS);
+		var mask = get_mask (context);
+		context.snapshot.push_rounded_clip (mask);
 
-		context.cr.set_source_rgb (0, 0, 0);
-		rounded_rectangle (context.cr, 0.5, 0.5, context.width - 1, context.height - 1, border_radius);
-		context.cr.fill ();
-		draw_pixbuf (context, pixbuf);
-		draw_border (context);
+		draw_background (context);
+		draw_texture (context, texture);
+
+		context.snapshot.pop ();
 
 		return true;
 	}
 
 	public void draw_default (DrawingContext context) {
-		draw_background (context);
-		draw_emblem_icon (context, "applications-games-symbolic", EMBLEM_SCALE);
-		draw_border (context);
+		var texture = get_emblem_icon (context, "applications-games-symbolic", EMBLEM_SCALE);
+		if (texture == null)
+			return;
+
+		draw_texture (context, texture);
 	}
 
-	private void draw_emblem_icon (DrawingContext context, string icon_name, double scale) {
+	private Gdk.Texture? get_emblem_icon (DrawingContext context, string icon_name, double scale) {
 		Gdk.Pixbuf? emblem = null;
 
 		var color = context.style.get_color ();
@@ -150,20 +146,16 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 			emblem = icon_info.load_symbolic (color);
 		} catch (GLib.Error error) {
 			warning (@"Unable to get icon “$icon_name”: $(error.message)");
-			return;
+			return null;
 		}
 
 		if (emblem == null)
-			return;
+			return null;
 
-		double offset_x = context.width / 2.0 - emblem.width / 2.0;
-		double offset_y = context.height / 2.0 - emblem.height / 2.0;
-
-		Gdk.cairo_set_source_pixbuf (context.cr, emblem, offset_x, offset_y);
-		context.cr.paint ();
+		return Gdk.Texture.for_pixbuf (emblem);
 	}
 
-	private Gdk.Pixbuf? get_scaled_icon (DrawingContext context, GLib.Icon? icon, double scale) {
+	private Gdk.Texture? get_scaled_icon (DrawingContext context, GLib.Icon? icon, double scale) {
 		if (icon == null)
 			return null;
 
@@ -171,20 +163,26 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		var lookup_flags = Gtk.IconLookupFlags.FORCE_SIZE | Gtk.IconLookupFlags.FORCE_REGULAR;
 		var size = int.min (context.width, context.height) * scale;
 		var icon_info = theme.lookup_by_gicon (icon, (int) size, lookup_flags);
+		Gdk.Pixbuf? pixbuf = null;
 
 		if (icon_info == null)
 			return null;
 
 		try {
-			return icon_info.load_icon ();
+			pixbuf = icon_info.load_icon ();
 		}
 		catch (Error e) {
 			warning (@"Couldn’t load the icon: $(e.message)\n");
 			return null;
 		}
+
+		if (pixbuf == null)
+			return null;
+
+		return Gdk.Texture.for_pixbuf (pixbuf);
 	}
 
-	private Gdk.Pixbuf? get_scaled_cover (DrawingContext context) {
+	private Gdk.Texture? get_scaled_cover (DrawingContext context) {
 		if (previous_cover_width != context.width) {
 			previous_cover_width = context.width;
 			cover_cache = null;
@@ -213,14 +211,20 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		var theme = Gtk.IconTheme.get_default ();
 		var lookup_flags = Gtk.IconLookupFlags.FORCE_SIZE | Gtk.IconLookupFlags.FORCE_REGULAR;
 		var icon_info = theme.lookup_by_gicon (g_icon, (int) size, lookup_flags);
+		Gdk.Pixbuf? pixbuf = null;
 
 		try {
-			cover_cache = icon_info.load_icon ();
-			save_cover_cache_to_disk (size);
+			pixbuf = icon_info.load_icon ();
+			save_cover_cache_to_disk (size, pixbuf);
 		}
 		catch (Error e) {
 			warning (@"Couldn’t load the icon: $(e.message)\n");
 		}
+
+		if (pixbuf == null)
+			return null;
+
+		cover_cache = Gdk.Texture.for_pixbuf (pixbuf);
 
 		return cover_cache;
 	}
@@ -242,16 +246,16 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		}
 
 		try {
-			cover_cache = new Gdk.Pixbuf.from_file_at_scale (cover_cache_path, context.width,
-			                                                 context.height, true);
+			var file = File.new_for_path (cover_cache_path);
+			cover_cache = Gdk.Texture.from_file (file);
 		}
 		catch (Error e) {
 			debug (e.message);
 		}
 	}
 
-	private void save_cover_cache_to_disk (int size) {
-		if (cover_cache == null)
+	private void save_cover_cache_to_disk (int size, Gdk.Pixbuf? pixbuf) {
+		if (pixbuf == null)
 			return;
 
 		Application.try_make_dir (Application.get_covers_cache_dir (size));
@@ -260,10 +264,10 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 
 		try {
 			var cover_cache_path = get_cover_cache_path (size);
-			cover_cache.save (cover_cache_path, "png",
-			                  "tEXt::Software", "GNOME Games",
-			                  "tEXt::Creation Time", creation_time.to_string (),
-			                  null);
+			pixbuf.save (cover_cache_path, "png",
+			             "tEXt::Software", "GNOME Games",
+			             "tEXt::Creation Time", creation_time.to_string (),
+			             null);
 		}
 		catch (Error e) {
 			critical (e.message);
@@ -286,50 +290,34 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		queue_draw ();
 	}
 
-	private void draw_pixbuf (DrawingContext context, Gdk.Pixbuf pixbuf) {
-		var surface = Gdk.cairo_surface_create_from_pixbuf (pixbuf, 1, context.surface);
-
-		var mask = get_mask (context);
-
-		var x_offset = (context.width - pixbuf.width) / 2;
-		var y_offset = (context.height - pixbuf.height) / 2;
-
-		context.cr.set_source_surface (surface, x_offset, y_offset);
-		context.cr.mask_surface (mask, 0, 0);
-	}
-
-	private Cairo.Surface get_mask (DrawingContext context) {
-		Cairo.ImageSurface mask = new Cairo.ImageSurface (Cairo.Format.A8, context.width, context.height);
+	private Gsk.RoundedRect get_mask (DrawingContext context) {
+		Graphene.Rect bounds = {};
+		bounds.init (0, 0, context.width, context.height);
 
 		var border_radius = (int) context.style.get_property (Gtk.STYLE_PROPERTY_BORDER_RADIUS);
 
-		Cairo.Context cr = new Cairo.Context (mask);
-		cr.set_source_rgba (0, 0, 0, 0.9);
-		rounded_rectangle (cr, 0.5, 0.5, context.width - 1, context.height - 1, border_radius);
-		cr.fill ();
+		Gsk.RoundedRect rect = {};
+		rect.init_from_rect (bounds, border_radius);
 
-		return mask;
+		return rect;
+	}
+
+	private void draw_texture (DrawingContext context, Gdk.Texture texture) {
+		var x_offset = (context.width - texture.width) / 2;
+		var y_offset = (context.height - texture.height) / 2;
+
+		Graphene.Rect bounds = {};
+		bounds.init (x_offset, y_offset, texture.width, texture.height);
+
+		context.snapshot.append_texture (texture, bounds);
 	}
 
 	private void draw_background (DrawingContext context) {
-		context.style.render_background (context.cr, 0.0, 0.0, context.width, context.height);
-	}
+		Graphene.Rect bounds = {};
+		bounds.init (0, 0, context.width, context.height);
 
-	private void draw_border (DrawingContext context) {
-		context.style.render_frame (context.cr, 0.0, 0.0, context.width, context.height);
-	}
+		Gdk.RGBA rgba = {0, 0, 0, 1};
 
-	private void rounded_rectangle (Cairo.Context cr, double x, double y, double width, double height, double radius) {
-		const double ARC_0 = 0;
-		const double ARC_1 = Math.PI * 0.5;
-		const double ARC_2 = Math.PI;
-		const double ARC_3 = Math.PI * 1.5;
-
-		cr.new_sub_path ();
-		cr.arc (x + width - radius, y + radius,	         radius, ARC_3, ARC_0);
-		cr.arc (x + width - radius, y + height - radius, radius, ARC_0, ARC_1);
-		cr.arc (x + radius,         y + height - radius, radius, ARC_1, ARC_2);
-		cr.arc (x + radius,         y + radius,          radius, ARC_2, ARC_3);
-		cr.close_path ();
+		context.snapshot.append_color (rgba, bounds);
 	}
 }
