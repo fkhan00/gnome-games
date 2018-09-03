@@ -8,6 +8,7 @@ private class Games.DatabaseGame : Object, Game {
 	private Database database;
 	private Game game;
 	private Uid uid;
+	private Developer developer;
 
 	public DatabaseGame (Database database, Game game) {
 		this.database = database;
@@ -16,6 +17,7 @@ private class Games.DatabaseGame : Object, Game {
 		var metadata = database.get_metadata (game);
 
 		uid = new DatabaseUid (metadata);
+		developer = new DatabaseDeveloper (metadata);
 	}
 
 	public Uid get_uid () {
@@ -47,7 +49,7 @@ private class Games.DatabaseGame : Object, Game {
 	}
 
 	public Developer get_developer () {
-		return database.get_developer (game.get_developer (), get_uid ());
+		return developer;
 	}
 
 	public Publisher get_publisher () {
