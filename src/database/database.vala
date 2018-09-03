@@ -21,6 +21,7 @@ private class Games.Database : Object {
 	private const string CREATE_METADATA_TABLE_QUERY = """
 		CREATE TABLE IF NOT EXISTS game_metadata (
 			uid TEXT PRIMARY KEY NOT NULL,
+			description TEXT,
 			developer TEXT
 		) WITHOUT ROWID;
 	""";
