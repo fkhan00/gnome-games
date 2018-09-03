@@ -63,10 +63,6 @@ private class Games.Database : Object {
 		return new DatabaseUriSource (database);
 	}
 
-	public DatabaseUid get_uid (Uid uid) {
-		return new DatabaseUid (database, uid);
-	}
-
 	public DatabaseDeveloper get_developer (Developer developer, Uid uid) {
 		return new DatabaseDeveloper (database, developer, uid);
 	}

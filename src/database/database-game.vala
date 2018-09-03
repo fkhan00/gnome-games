@@ -7,14 +7,19 @@ private class Games.DatabaseGame : Object, Game {
 
 	private Database database;
 	private Game game;
+	private Uid uid;
 
 	public DatabaseGame (Database database, Game game) {
 		this.database = database;
 		this.game = game;
+
+		var metadata = database.get_metadata (game);
+
+		uid = new DatabaseUid (metadata);
 	}
 
 	public Uid get_uid () {
-		return database.get_uid (game.get_uid ());
+		return uid;
 	}
 
 	public Icon get_icon () {
