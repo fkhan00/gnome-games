@@ -82,7 +82,7 @@ fedora:29:
     # libmanette, retro-gtk and gnome-games aren't in Fedora repos, so we
     # cannot simply do `dnf builddep -y libmanette retro-gtk gnome-games`
     - dnf install -y redhat-rpm-config git vala meson libevdev-devel libepoxy-devel
-                     gtk3-devel pulseaudio-libs-devel grilo-devel librsvg2-devel
+                     gtk4-devel pulseaudio-libs-devel grilo-devel librsvg2-devel
                      libsoup-devel sqlite-devel tracker-devel libarchive-devel
     - bash -x ./.gitlab-ci/prepare.sh
   script:
