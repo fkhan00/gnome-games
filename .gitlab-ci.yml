@@ -98,3 +98,4 @@ ubuntu:devel:
     - bash -x ./.gitlab-ci/prepare.sh
   script:
     - bash -x ./.gitlab-ci/build.sh
+  allow_failure: yes
